@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by universallp on 25.02.2017.
  * This file is part of jopp which is licenced
  * under the MOZILLA PUBLIC LICENCE 2.0 - mozilla.org/en-US/MPL/2.0/
- * github.com/UniversalLP/jopp
+ * github.com/UniversalLP/opp
  */
 class PaintUtils {
     static int last_width = 0;
