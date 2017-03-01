@@ -70,15 +70,15 @@ public class JOpp {
     }
 
     static void startAnalyzer(String path) {
-        System.out.println("Analyzing " + path);
+        Analyzer a = new Analyzer(path);
+        a.log.writeLine("Analyzing " + path);
         long begin = System.currentTimeMillis();
 
-        Analyzer a = new Analyzer(path);
         a.analyze();
 
         long duration = System.currentTimeMillis() - begin;
 
-        System.out.println("Done! Analyzing took " + duration + "ms");
+        a.log.writeLine("Done! Analyzing took " + duration + "ms");
     }
 
     static boolean showAnalyzePrompt() {

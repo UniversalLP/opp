@@ -15,10 +15,13 @@ public class Analyzer {
     private final File db_folder;
     private final boolean canAnalyze;
     private Database db_instance;
+    public final AnalyzerLog log;
 
     Analyzer(String pathToAnalyze) {
         this.db_folder = new File(pathToAnalyze);
-        canAnalyze = db_folder.isDirectory() || db_folder.exists();
+        this.log = new AnalyzerLog();
+        this.canAnalyze = db_folder.isDirectory() || db_folder.exists();
+
     }
 
     void analyze() {
@@ -32,6 +35,8 @@ public class Analyzer {
                 analyzeFile(f);
             }
         }
+        log.setLocationRelativeTo(null);
+        log.setVisible(true);
     }
 
     private void analyzeFile(File f) {
@@ -58,11 +63,34 @@ public class Analyzer {
         }
 
         avg = total_latency / db_instance.data_list.size();
-        System.out.println("---------");
-        System.out.println(f.getName() + ":");
-        System.out.println(String.format("Max ping of      %sms at %s", db_instance.max_ping, sdf.format(new Date(time_of_maxping))));
-        System.out.println(String.format("Max ping jump of %sms at %s", max_ping_jump, sdf.format(new Date(time_of_jump))));
-        System.out.println(String.format("Average ping of  %sms", avg));
+        log.writeLine("---------");
+        log.writeLine(f.getName() + ":");
+        log.writeLine(String.format("Max ping of      %sms at %s", db_instance.max_ping, sdf.format(new Date(time_of_maxping))));
+        log.writeLine(String.format("Max ping jump of %sms at %s", max_ping_jump, sdf.format(new Date(time_of_jump))));
+        log.writeLine(String.format("Average ping of  %sms", avg));
 
+    }
+
+    class AnalyzerLog extends JFrame {
+
+        final JTextArea log;
+        final JScrollPane content;
+
+        AnalyzerLog() {
+            super("jOpp analyzer log");
+            this.log = new JTextArea();
+            this.log.setEditable(false);
+            this.content = new JScrollPane(log);
+
+            setContentPane(content);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+            setSize(600, 800);
+        }
+
+        void writeLine(String s) {
+            log.append(s + "\n");
+            System.out.println(s);
+        }
     }
 }
