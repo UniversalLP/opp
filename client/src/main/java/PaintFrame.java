@@ -1,8 +1,10 @@
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 /**
  * Created by universallp on 25.02.2017.
@@ -10,9 +12,9 @@ import java.awt.event.*;
  * under the MOZILLA PUBLIC LICENCE 2.0 - mozilla.org/en-US/MPL/2.0/
  * github.com/UniversalLP/opp
  */
-public class PaintFrame extends JFrame {
+class PaintFrame extends JFrame {
 
-    public PaintFrame(String title) {
+    PaintFrame(String title) {
         super(title);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(1280, 720);
@@ -23,7 +25,7 @@ public class PaintFrame extends JFrame {
 
     class PaintPane extends JPanel {
 
-        public PaintPane() {
+        PaintPane() {
             addMouseWheelListener(new PaneMouseWheelListener());
             addMouseListener(new PaneMouseHandler());
             addMouseMotionListener(new PaneMouseMotionListener());
@@ -57,12 +59,12 @@ public class PaintFrame extends JFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            PaintUtils.drawRuler = true;
+            PaintUtils.gS.drawRuler = true;
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            PaintUtils.drawRuler = false;
+            PaintUtils.gS.drawRuler = false;
             JOpp.pFrame.repaint();
         }
 
@@ -85,7 +87,7 @@ public class PaintFrame extends JFrame {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            if (PaintUtils.drawRuler)
+            if (PaintUtils.gS.drawRuler)
                 JOpp.pFrame.repaint();
         }
 

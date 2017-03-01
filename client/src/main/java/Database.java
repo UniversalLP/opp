@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by universallp on 25.02.2017.
@@ -11,7 +10,7 @@ import java.util.Date;
  * under the MOZILLA PUBLIC LICENCE 2.0 - mozilla.org/en-US/MPL/2.0/
  * github.com/UniversalLP/opp
  */
-public class Database {
+class Database {
 
     class Data {
         long begin_time, end_time;
@@ -29,7 +28,7 @@ public class Database {
     ArrayList<Data> data_list = new ArrayList<>();
     int max_ping = 0;
     int min_ping = Integer.MAX_VALUE;
-    public int total_nodes = 0;
+    int total_nodes = 0;
     private File database;
 
     private Database(File f) {
