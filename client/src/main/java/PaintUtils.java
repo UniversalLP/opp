@@ -117,7 +117,6 @@ class PaintUtils {
 
             if (gS.nodeSpace > JOpp.db.total_nodes)
                 gS.nodeSpace = JOpp.db.total_nodes;
-
             gS.maxScrollOffset = JOpp.db.data_list.size() - gS.nodeSpace;
 
             gS.scrollbarWidth = (int) (((float) gS.nodeSpace / JOpp.db.total_nodes) * r.width);
@@ -127,7 +126,7 @@ class PaintUtils {
 
     static boolean scroll(int i) {
         int old = offset;
-        offset = Math.max(0, Math.min(gS.nodeSpace, offset + i));
+        offset = Math.max(0, Math.min(gS.maxScrollOffset, offset + i));
         return old != offset;
     }
 

@@ -102,14 +102,14 @@ def find_or_create_db_file():
     if flag:
         return
 
-    db_name = "DB_" + datetime.datetime.now().strftime('%d-%m-%Y') + ".odb"
+    db_name = "DB_" + datetime.datetime.now().strftime('%d-%m-%Y') + ".csv"
     log("Couldn't find database for today! Creating one now as " + db_name)
     db_file = open(db_folder + "/" + db_name, "a")
 
 
 if not ping.can_run():
     log("pyopp can only handle output of windows and linux ping commmands.")
-    log("Modify opp.py line 102 and remove the exit() command to try it on other platforms")
+    log("Modify opp.py below this message and remove the exit() command to try it on other platforms")
     log("(No guarantee)")
     exit()
 
@@ -126,6 +126,8 @@ log(" Ping diff : " + str(ping_diff))
 begin_time = get_epoch_time()
 start = datetime.datetime.now()
 
+valid_result = False
+
 while True:
     try:
         time_now = datetime.datetime.now()
@@ -138,28 +140,43 @@ while True:
         ping.ping_ip(target_address)
         log("Ping results: " + str(ping.latency) + "ms, Packetloss: " + ping.int_to_text(ping.packet_loss))
 
-        if not ping.last_latency == -1 and ping.diff(ping.latency, ping.last_latency) >= ping_diff or ping.packet_loss == 1:
-            log(" Latency fluctuation over " + str(ping_diff) + "!")
-            db_file.write(str(begin_time) + "\n")
-            db_file.write(str(get_epoch_time()) + "\n")
-            db_file.write(str(ping.latency) + "\n")
-            db_file.write(str(ping.packet_loss))
-            begin_time = get_epoch_time()
+        last_latency = int(ping.last_latency)
+        latency = int(ping.latency)
+        diff = int(ping_diff)
 
-        ping_count += 1
+        valid_result = isinstance(last_latency, int) and isinstance(latency, int) \
+            and isinstance(diff, int)
 
-        if ping_count >= auto_save_interval:
-            log(" Autosaving...")
-            db_file.close()
-            db_file = open(db_folder + "/" + db_name, "a")
-            ping_count = 0
+        print(isinstance(last_latency, int))
+        print(isinstance(latency, int))
+        print(isinstance(diff, int))
+
+        if valid_result:
+            if not ping.last_latency == -1 and ping.diff(ping.latency, ping.last_latency) >= ping_diff \
+                    or ping.packet_loss == 1:
+                log(" Latency fluctuation over " + str(ping_diff) + "!")
+                db_file.write(str(begin_time) + ";")
+                db_file.write(str(get_epoch_time()) + ";")
+                db_file.write(str(ping.latency) + ";")
+                db_file.write(str(ping.packet_loss))
+                begin_time = get_epoch_time()
+
+            ping_count += 1
+
+            if ping_count >= auto_save_interval:
+                log(" Autosaving...")
+                db_file.close()
+                db_file = open(db_folder + "/" + db_name, "a")
+                ping_count = 0
+        else:
+            log("Invalid response from ping command! Skipping...")
 
         time.sleep(interval / 1000)
     except KeyboardInterrupt:
         log("Shutting down!")
-        db_file.write(str(begin_time) + "\n")
-        db_file.write(str(get_epoch_time()) + "\n")
-        db_file.write(str(ping.latency) + "\n")
+        db_file.write(str(begin_time) + ";")
+        db_file.write(str(get_epoch_time()) + ";")
+        db_file.write(str(ping.latency) + ";")
         db_file.write(str(ping.packet_loss))
         db_file.close()
         exit()

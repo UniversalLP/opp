@@ -23,7 +23,7 @@ public class JOpp {
             JFileChooser jfc = new JFileChooser();
             if (showAnalyzePrompt()) {
 
-                jfc.setFileFilter(new FileNameExtensionFilter("Opp Database", "odb"));
+                jfc.setFileFilter(new FileNameExtensionFilter("Opp Database", "csv"));
                 jfc.setDialogTitle("Choose a database to analyze");
                 jfc.showOpenDialog(null);
 

@@ -31,7 +31,7 @@ public class Analyzer {
         }
 
         for (File f : db_folder.listFiles()) {
-            if (f.isFile() && f.canRead() && f.getName().endsWith(".odb")) {
+            if (f.isFile() && f.canRead() && f.getName().endsWith(".csv")) {
                 analyzeFile(f);
             }
         }

@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,17 +42,22 @@ class Database {
     private void read_from_file() {
         try (BufferedReader br = new BufferedReader(new FileReader(database))) {
             String line;
+            String[] info;
             while ((line = br.readLine()) != null) {
-                long start = Long.parseLong(line);
-                line = br.readLine();
-                long end = Long.parseLong(line);
-                line = br.readLine();
-                int latency = Integer.parseInt(line);
-                line = br.readLine();
-                boolean packetLoss = !line.equals("0");
+                info = line.split(";");
 
-                data_list.add(new Data(start * 1000, end * 1000, latency, packetLoss));
+                if (line.length() < 4) {
+                    System.out.println("Line is *.csv doesn't contain 4 values!");
+                } else {
+                    long start = Long.parseLong(info[0]);
+                    long end = Long.parseLong(info[1]);
+                    int latency = Integer.parseInt(info[2]);
+                    boolean packetLoss = !info[3].equals("0");
+
+                    data_list.add(new Data(start * 1000, end * 1000, latency, packetLoss));
+                }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
